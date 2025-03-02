@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💖 Love Collector 💕</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f2;
+        }
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff4d79;
+            margin-top: 20px;
+        }
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border: 2px solid pink;
+            background-color: #fff0f5;
+        }
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            cursor: grab;
+            color: red;
+            animation: flutter 3s infinite alternate ease-in-out;
+        }
+        @keyframes flutter {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(20px); }
+        }
+        .box {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background-color: #ff4d79;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 100px;
+            font-size: 1.5em;
+            color: white;
+            font-weight: bold;
+        }
+        .popup, .final-message, .message-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px pink;
+        }
+        .popup h2, .final-message h2, .message-popup h2 {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">💖 Love Collector 💕</div>
+    <div class="game-container" id="gameContainer">
+        <div class="box" id="box">🎁</div>
+    </div>
+    <div class="popup" id="popup">
+        <h2>💘 You collected all hearts! 💘</h2>
+        <p>Opening the love box...</p>
+    </div>
+    <div class="final-message" id="finalMessage">
+        <h2>💌 My Love Letter 💌</h2>
+        <p>"You are my heart, my soul, my everything. Every heartbeat whispers your name. You are my greatest gift, my endless love."</p>
+        <h3>💖 THE BEST THING TO EVER HAPPEN TO ME 💖</h3>
+    </div>
+    <div class="message-popup" id="messagePopup">
+        <h2 id="messageText"></h2>
+    </div>
+    <script>
+        let heartMessages = [
+            "You make my heart flutter! 💕",
+            "You're my moon! 🌕",
+            "My world is brighter with you! 🌎",
+            "Every moment with you is special! 💫",
+            "You're my one and only! 💖",
+            "I love you more than words can say! 💗",
+            "Forever and always, my love! 💘"
+        ];
+        let collectedHearts = 0;
+        const gameContainer = document.getElementById('gameContainer');
+        const box = document.getElementById('box');
+        const popup = document.getElementById('popup');
+        const finalMessage = document.getElementById('finalMessage');
+        const messagePopup = document.getElementById('messagePopup');
+        const messageText = document.getElementById('messageText');
+
+        function createHeart() {
+            let heart = document.createElement("div");
+            heart.innerHTML = "❤️";
+            heart.classList.add("heart");
+            heart.style.top = Math.random() * 400 + "px";
+            heart.style.left = Math.random() * (window.innerWidth - 50) + "px";
+            heart.draggable = true;
+            heart.addEventListener("dragstart", function(event) {
+                event.dataTransfer.setData("text", event.target.id);
+            });
+            heart.id = "heart" + collectedHearts;
+            gameContainer.appendChild(heart);
+        }
+        
+        box.addEventListener("dragover", function(event) {
+            event.preventDefault();
+        });
+        
+        box.addEventListener("drop", function(event) {
+            event.preventDefault();
+            let heartId = event.dataTransfer.getData("text");
+            let heart = document.getElementById(heartId);
+            if (heart) {
+                heart.remove();
+                showMessagePopup(heartMessages[collectedHearts]);
+                collectedHearts++;
+                if (collectedHearts === 7) {
+                    showPopup();
+                }
+            }
+        });
+
+        function showMessagePopup(message) {
+            messageText.innerHTML = message;
+            messagePopup.style.display = "block";
+            setTimeout(() => {
+                messagePopup.style.display = "none";
+            }, 4000);
+        }
+
+        function showPopup() {
+            popup.style.display = "block";
+            setTimeout(() => {
+                popup.style.display = "none";
+                showFinalMessage();
+            }, 4000);
+        }
+        
+        function showFinalMessage() {
+            finalMessage.style.display = "block";
+            setTimeout(() => {
+                finalMessage.innerHTML = "<h2>💖 THE BEST THING TO EVER HAPPEN TO ME 💖</h2>";
+            }, 20000);
+        }
+        
+        for (let i = 0; i < 7; i++) {
+            createHeart();
+        }
+    </script>
+</body>
+</html>
